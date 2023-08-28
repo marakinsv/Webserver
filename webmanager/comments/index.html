@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  
+  <script src="/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/jquery/jquery-ui-1.12.1.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="/jquery/jquery-ui.css"/>
+
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid.css" />
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid-theme.css" />
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid-colors.css" />
+        
+  <script type="text/javascript" src="/jsgrid/jsgrid.min.js"></script>
+  
+  <script src="/comments/handlerevents/createfieldsgrid/createfieldsgrid.js"></script>
+  <script src="/comments/handlerevents/loaddatagrid/loaddatagrid.js"></script>
+  <script src="/comments/handlerevents/befinsertitemgrid/befinsertitemgrid.js"></script>
+  <script src="/comments/handlerevents/insertitemgrid/insertitemgrid.js"></script>
+  <script src="/comments/handlerevents/befupdateitemgrid/befupdateitemgrid.js"></script>
+  <script src="/comments/handlerevents/updateitemgrid/updateitemgrid.js"></script>
+  <script src="/comments/handlerevents/befdeleteitemgrid/befdeleteitemgrid.js"></script>
+  <script src="/comments/handlerevents/deleteitemgrid/deleteitemgrid.js"></script>
+  
+  <script src="/comments/handlerevents/refreshcssgridcolors/refreshcssgridcolors.js"></script>
+</head>
+
+<body>
+  <div id="grid"></div>
+  <script>
+    // Глобальные переменные (имеют префикс g)  
+    let g_rhost = window.location.host       // Хост веб-сервера  
+    var g_params = {'managobj': '', 'obj': '', 'system': ''}  // Параметры из строки запроса	
+	var sr = decodeURIComponent(window.location.search)       // Параметры запроса
+	if (sr != '') {
+        var ls = sr.split('=')[1].split(',')
+        if (ls.length >= 4) g_params = {'managobj': ls[1], 'obj': ls[2], 'system': ls[3]}
+	}
+	history.pushState('', '', window.location.pathname)
+	let g_timeout = 5                          // Время ожидания ответа от сервера в сек.
+	g_selected_num = -1                        // Номер замечания, выделенного элемента grid
+	// -------------------------------------------
+    $(function() {
+	    var fieldsgrid = createFieldsGrid()  // Обработка события реализуется в "comments/handlerevents/createfieldsgrid"
+        $("#grid").jsGrid({
+            fields: fieldsgrid,
+            data: [],
+ 
+            autoload: true,
+			
+            controller: {
+                loadData: loadDataGrid,       // Обработка события в "comments/handlerevents/loaddatagrid"
+                insertItem: insertItemGrid,   // Обработка события в "comments/handlerevents/insertitemgrid"
+                updateItem: updateItemGrid,   // Обработка события в "comments/handlerevents/updateitemgrid"
+                deleteItem: deleteItemGrid    // Обработка события в "comments/handlerevents/deleteitemgrid"
+            },
+			
+            width: 1840,
+            height: 'auto',
+ 
+            heading: true,
+            filtering: true,
+            inserting: true,
+            editing: true,
+            selecting: true,
+            sorting: false,
+            paging: true,
+            pageLoading: false,
+            rowClass: function(item, itemIndex) {
+			    return 'row-custom-class-item' + itemIndex
+			},
+            //rowClick: function(args) {},
+            //rowDoubleClick: function(args) { ... },
+ 
+            noDataContent: "Not found",
+ 
+            confirmDeleting: false,
+            //deleteConfirm: "Действительно удалить замечание?",
+ 
+            pagerContainer: null,
+            pageIndex: 1,
+            pageSize: 15,
+            pageButtonCount: 15,
+            pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} of {pageCount}",
+            pagePrevText: "Prev",
+            pageNextText: "Next",
+            pageFirstText: "First",
+            pageLastText: "Last",
+            pageNavigatorNextText: "...",
+            pageNavigatorPrevText: "...",
+ 
+            //invalidNotify: function(args) { ... }
+            invalidMessage: "Invalid data entered!",
+ 
+            loadIndication: true,
+            loadIndicationDelay: 500,
+            loadMessage: "Please, wait...",
+            loadShading: true,
+ 
+            updateOnResize: true,
+ 
+            rowRenderer: null,
+            headerRowRenderer: null,
+            filterRowRenderer: null,
+            insertRowRenderer: null,
+            editRowRenderer: null,
+			
+			// CallBacks
+			//onDataLoaded: dataLoaded,             
+            onItemInserting: befInsertItemGrid,   // Обработка события в "comments/handlerevents/befinsertitemgrid"
+            onItemInserted: function(args) {;},   // on done of controller.insertItem
+            onItemUpdating: befUpdateItemGrid,    // Обработка события в "comments/handlerevents/befupdateitemgrid"
+            onItemUpdated: function(args) {;},    // on done of controller.updateItem
+            onItemDeleting: befDeleteItemGrid,    // Обработка события в "comments/handlerevents/befdeleteitemgrid"
+            onItemDeleted: function(args) {;},    // on done of controller.deleteItem
+            onItemInvalid: function(args) {;}     // after item validation, in case data is invalid
+        })
+    })
+
+
+  </script>
+</body>
+
+</html>

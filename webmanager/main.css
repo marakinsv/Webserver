@@ -1,0 +1,121 @@
+﻿@charset "UTF-8";
+
+ul {
+   list-style-type: none;
+   #list-style-image: url(images/upload.png); /* Путь к изображению маркера */
+}
+
+A {
+   text-decoration: none; /* Убирает подчеркивание для ссылок */
+}
+/* Подпись опереции с файлом */
+#operdescr {
+	font-size: 10px;
+    color: RosyBrown;
+}
+
+/* Button */
+/* Кнопки фрейма ввода данных */
+.btnshowframe {
+    padding: 1px 2px;
+    border: 1px;
+    width: 80px;
+    height: 30px;
+	margin-left: 1px;
+	margin-top: 2px;
+	font-size: 11px;
+    border-color: black;
+    background-color: SteelBlue;
+    color: LightCyan;
+    padding: 1px 2px;
+    text-align: center;
+	border-radius: .2em;
+}
+
+.btndownload {
+    padding: 1px 2px;
+    border: 2px;
+    width: 80px;
+    height: 30px;
+	margin-left: 1px;
+	margin-top: 2px;
+	font-size: 11px;
+    border-color: black;
+    background-color: red;
+    color: white;
+    padding: 1px 2px;
+    text-align: center;
+	border-radius: .2em;
+}
+
+/* Стили для дерева папок */
+
+.tree {
+    position: absolute;
+    width: 20%;
+    left: 0px;
+	top: 0px;
+    max-width: 500px;
+    min-width: 300px;
+    #background-color: Azure;
+}
+
+/* Пустая вкладка */
+.tabempty {
+    color: lightgray !important;
+}
+
+/* Вкладка не определена */
+.tabunknown {
+    background-color: red;
+    color: white !important;
+}
+
+/* Прогресс бар */
+#progressbar {
+    position: relative;
+	left: 4px;
+	top: 270px;
+    width:700px;
+    height:22px;
+}
+
+/* Фрейм данных для загрузки файла */
+#inputframe {
+    position: relative;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: solid 1px;
+    border-color: gray;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    border-radius: .1em;
+    width:800px;
+    height:300px;
+}
+
+/* Фрейм данных для загрузки файла */
+#inputframe label {
+    position: absolute;
+    left: 10px;
+}
+
+#inputframe input {
+    position: absolute;
+    width: 800px;
+    height: 26px;
+}
+
+#inputframe select {
+    position: absolute;
+    width:300px;
+    height: 26px;
+}
+
+#inputframe textarea {
+    position: absolute;
+    width:600px;
+    height: 60px;
+}

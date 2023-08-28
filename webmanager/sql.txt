@@ -1,0 +1,45 @@
+{"Новиков Дмитрий Анатольевич","Насыбуллин Дамир Аминович","Султанов Денис Наилович","Аверин Иван Григорьевич","Соловьев Сергей Евгеньевич","Давыдов Павел Валерьевич","Бородин Сергей Николаевич","Заболотских Антон Владимирович","Казарин Сергей Геральдович","Хуснутдинов Тимур Русланович","Доброхотов Роман Анатольевич","Берейчук Игорь Валерьевич","Сафиев Динар Фирдинатович","Баянов Алмаз Фанилевич","Сергеев Виталий Викторович","Мустафин Азат Мухамматович","Ракипов Марат Марсельевич","Гаврилов Виталий Анатольевич","Тютюгин Олег Александрович","Степанов Дмитрий Сергеевич","Маракин Сергей Викторович","Ахметзянов Марат Саубанович","Деликаев Рашид Маснавиевич","Крылов Владимир Юрьевич","Лукоянов Артем Александрович","Галиев Салават Наилевич","Салахов Рафаэль Илдусович","Махмутов Фархад Фангатович","Ибрагимов Айрат Азатович"}
+
+
+CREATE TABLE public."LOG_MPSA" (
+  "MANAGOBJ" TEXT NOT NULL,
+  "OBJECT" TEXT NOT NULL,
+  "SYSTEM" TEXT NOT NULL,
+  "PARTITION" TEXT NOT NULL,
+  "DATE" DATE NOT NULL,
+  "DTIMELOAD" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+  "REASON" TEXT NOT NULL,
+  "USERNAME" TEXT NOT NULL,
+  "DESCRIPTION" TEXT
+) 
+WITH (oids = false);
+
+COMMENT ON COLUMN public."LOG_MPSA"."MANAGOBJ"
+IS 'РНУ';
+
+COMMENT ON COLUMN public."LOG_MPSA"."OBJECT"
+IS 'НПС';
+
+COMMENT ON COLUMN public."LOG_MPSA"."SYSTEM"
+IS 'Система';
+
+COMMENT ON COLUMN public."LOG_MPSA"."PARTITION"
+IS 'Раздел (backup, КД и т.д.)';
+
+COMMENT ON COLUMN public."LOG_MPSA"."DATE"
+IS 'Дата файла';
+
+COMMENT ON COLUMN public."LOG_MPSA"."DTIMELOAD"
+IS 'Дата, время загрузки файла';
+
+COMMENT ON COLUMN public."LOG_MPSA"."REASON"
+IS 'Причина';
+
+COMMENT ON COLUMN public."LOG_MPSA"."USERNAME"
+IS 'Автор';
+
+COMMENT ON COLUMN public."LOG_MPSA"."DESCRIPTION"
+IS 'Описание';
+
+ALTER TABLE public."LOG_MPSA"
+  OWNER TO postgres;

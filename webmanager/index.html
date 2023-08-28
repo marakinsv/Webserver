@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  
+  <script src="/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/jquery/jquery-ui-1.12.1.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="/jquery/jquery-ui.css"/>
+
+  <script src="/jstree/jstree.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="/jstree/themes/default/style.min.css"/>
+
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid.css" />
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid-theme.css" />
+  <link type="text/css" rel="stylesheet" href="/jsgrid/jsgrid-colors.css" />
+        
+  <script type="text/javascript" src="/jsgrid/jsgrid.min.js"></script>
+  
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="main.css"/>
+  
+  <script src="/handlerevents/selectnode/selectnode.js"></script>
+  <script src="/handlerevents/createnode/createnode.js"></script>
+  <script src="/handlerevents/deletenode/deletenode.js"></script>
+  <script src="/handlerevents/renamenode/renamenode.js"></script>
+  <script src="/handlerevents/createstruct/createstruct.js"></script>
+  <script src="/handlerevents/changetab/changetab.js"></script>
+  <script src="/handlerevents/gotoinside/gotoinside.js"></script>
+  <script src="/handlerevents/showinputframe/showinputframe.js"></script>
+  <script src="/handlerevents/befdownloadfile/befdownloadfile.js"></script>
+  <script src="/handlerevents/downloadfile/downloadfile.js"></script>
+  <script src="/handlerevents/showcmenu/showcmenu.js"></script>
+</head>
+
+<body>
+  <div class='tree' id='treeview'></div> 
+  <div id="tabs" visible: hidden>
+    <ul data-role="listview" ></ul>  
+	<input type='button' class='btnshowframe' value='Добавить' onclick='showinputframe();'>
+	<input type='button' class='btndownload' value='Загрузить' onclick='befdownloadfile();' visible: hidden>
+	<div id="inputframe" visible: hidden>
+	  <label>Дата: </label><input id="date" style="left:90px;width:290px;height:22px"/>	  
+	  <label style="top:45px">Причина: </label>
+	  <input id="reasons" style="left:90px;top:45px;width:290px;height:22px"/>
+	  <label style="top:80px">Автор: </label>
+      <select id="combo_users" style="left:90px;top:80px;width:294px;height:24px"></select>
+	  <label style="top:112px">Файл: </label>
+      <input type="file" id="sendfile" style="left:90px;top:112px">
+	  <label style="top:144px">Распаковать файл в хранилище</label>
+	  <input type="checkbox" id="enunzip" style="left:250px;top:141px;width:20px;height:20px">
+      <label style="top:174px">Описание: </label>
+      <textarea id="descr" style="left:90px;top:174px;height:80px"> </textarea>
+	  <label id="operdescr" style="top:267px" visible: hidden>Текущая операция с файлом</label>
+      <div id="progressbar"></div> 	  
+	</div>
+  </div>
+  <div id="grid" visible: hidden></div>
+  <ul id="menu"></ul>
+  <div class="context-menu-one box menu-1"></div>  
+  <script>
+  let g_rhost = window.location.host;     // Хост веб-сервера
+  let g_instance = null;                  // Экземпляр дерева папок
+  let g_selnode = null;                   // Выделенная папка в дереве
+  let g_fullpath = null;                  // Полный путь до выделенной папки
+  let g_folders = [];                     // Список папок в выделенной папке
+  let g_selfolder = null;                 // Текущая выделенная папка 
+  let g_viewpath = '';                    // Просматриваемый путь при переходе из папки в папку  
+  let upload_folder = null;               // Папка для загрузки файла
+  let g_sendfile = null;                  // Загружаемый на сервер файл
+  let g_numtab = null;                    // Номер текущей вкладки
+  let g_downloading = false;              // Идет загрузка файла
+  let g_engoinside = true;                // Разрешен переход во внутрь папки
+  let g_sysid = -1;                       // Данные  0 - МПСА, 1 - ЛТМ
+  $(function() {
+    history.pushState(null, null, '/OSPAS');
+    $('#sendfile').on("change", function() {g_sendfile = this.files[0];});
+    $.ajax({
+        url: 'http://' + g_rhost + '/getsysid',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+		            g_sysid = parseInt(data['sysid']);
+                 }
+    });
+    if 	(g_sysid == -1) {
+	    alert('Не удалось получить идентификатор системы ( 0 - МПСА, 1 - ЛТМ)');
+		return;
+	}
+    $('#treeview')
+	    .bind('before.jstree', function (evt, data) {
+		// событие перед загрузкой дерева
+	    })
+	    .jstree({
+            'core' : {
+                'data' : {
+                    'url' : 'http://' + g_rhost + '/treeview',
+                    'dataType' : 'json'
+                }
+            },
+            'contextmenu' : {
+                'items' : showcmenu
+            },
+            'plugins' : ['contextmenu', 'types']
+        })
+	    .bind('select_node.jstree', selectnode)       // Выделение узла в дереве (папки)
+		
+	//var root_node = $('#treeview').jstree().get_node('j1_1');	
+	//$('#treeview').jstree('set_icon', 'j1_1', '/images/chip&deil.png');
+	$("div#tabs").tabs();                                    // Создаем вкладки	
+    $('#menu').menu();                                       // Создаем контекстное меню
+    $('#menu').hide();	
+    $("input#date").datepicker({dateFormat: "dd.mm.yy"});    // Создаем выбор даты
+    $("div#progressbar").progressbar();	
+  })
+  </script>
+</body>
+
+</html>

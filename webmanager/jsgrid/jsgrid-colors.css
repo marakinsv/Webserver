@@ -1,0 +1,12 @@
+/*
+  Цвета ячеек grid (данная таблица стилей формируется динамически) 
+*/
+/*
+Изменение цвета 1-й строки 1-й колонки
+.row-custom-class-item0 td:nth-child(2) {
+    background: red;
+}
+.row-custom-class-item0 td:nth-child(2) {
+    background-color: rgb(192,91,116);
+}
+*/

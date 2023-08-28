@@ -1,0 +1,15 @@
+﻿# Все столбцы из таблицы БД 'NOTICE' и типы данных значений столбцов для форматирования значения при вставке в БД
+c_name_cols = {'MANAGOBJ': 'TEXT',
+               'OBJECT': 'TEXT',
+               'SYSTEM': 'TEXT',
+               'NUM': 'INTEGER',
+               'COMMENT': 'TEXT',
+               'SDATETIME': 'TEXT',
+               'STEP': 'TEXT',
+               'LEVEL': 'TEXT',
+               'PERSON': 'TEXT',
+               'STATUS': 'TEXT',
+               'LIMITSDATETIME': 'TEXT',
+               'DESCRIPTION': 'TEXT',
+               'ATTRIBUTES': 'JSONB',
+               'ISDELETED': 'BOOLEAN'}
